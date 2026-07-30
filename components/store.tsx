@@ -202,7 +202,7 @@ export function Store({ initialCount }: { initialCount: number }) {
             Also In Stock
           </h2>
           <p className="mb-4 text-lg text-muted-foreground">
-            These aren&apos;t on the bulk order form yet — ping us on Discord to grab them.
+            These aren&apos;t on the bulk order form yet — but you can buy them for cheap at our store.
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {ALSO_AVAILABLE.map((product) => (
