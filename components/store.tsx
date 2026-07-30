@@ -110,8 +110,12 @@ export function Store({ initialCount }: { initialCount: number }) {
             Democracy Craft XP Store
           </h1>
           <p className="mt-2 text-xl text-muted-foreground md:text-2xl">
-            Bulk XP bottles · delivered to{" "}
+            Bulk XP bottles · order more than you can carry from{" "}
             <span className="text-accent">c410-c1</span>
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-muted-foreground">
+            Our shop at c410-c1 is for in-person buys. This site is for big bulk
+            orders you can&apos;t easily grab in-store.
           </p>
         </div>
         <OrderCounter count={count} />
@@ -310,7 +314,7 @@ export function Store({ initialCount }: { initialCount: number }) {
                   Total: <span className="text-accent">{formatPrice(lastOrder.total)}</span>
                 </p>
                 <p className="text-foreground">
-                  Delivery: <span className="text-accent">{lastOrder.delivery}</span> to c410-c1
+                  Delivery: <span className="text-accent">{lastOrder.delivery}</span>
                 </p>
                 <p className="text-muted-foreground">
                   We&apos;ll reach out on Discord to arrange the drop-off.
@@ -322,7 +326,7 @@ export function Store({ initialCount }: { initialCount: number }) {
       </div>
 
       <footer className="mt-10 text-center text-lg text-muted-foreground">
-        <p>Democracy Craft XP Store · Not affiliated with Mojang · Pickup at c410-c1</p>
+        <p>Democracy Craft XP Store · Not affiliated with Mojang · In-store at c410-c1</p>
       </footer>
       </div>
     </>
