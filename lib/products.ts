@@ -2,6 +2,7 @@ export type Product = {
   id: string
   name: string
   pricePerItem: number
+  minStacks: number
   emojiFallback: string
   color: string
   blurb: string
@@ -10,32 +11,41 @@ export type Product = {
 export const STACK_SIZE = 64
 export const MIN_STACKS = 0.5
 
-// The only product available to order in bulk online.
+// ── High demand mode ────────────────────────────────────────────────
+// Set HIGH_DEMAND to true when we're sold/bought out. It caps every bulk
+// order at MAX_STACKS_HIGH_DEMAND stacks per item and shows a notice banner.
+export const HIGH_DEMAND = false
+export const MAX_STACKS_HIGH_DEMAND = 2
+
+// Products available to order in bulk online.
 export const PRODUCTS: Product[] = [
   {
     id: "xp_bottle",
     name: "XP Bottle",
     pricePerItem: 6.3,
+    minStacks: 0.5,
     emojiFallback: "XP",
     color: "#5fbf4a",
     blurb: "Bottles o' Enchanting. Sold in bulk for fast leveling.",
   },
-]
-
-// Extra items we also stock — mentioned only, ask in Discord to buy.
-export const ALSO_AVAILABLE: Product[] = [
   {
     id: "honey_bottle",
     name: "Honey Bottle",
-    pricePerItem: 1,
+    pricePerItem: 1.12,
+    minStacks: 1,
     emojiFallback: "HN",
     color: "#e0a92e",
     blurb: "Sweet, restorative honey bottles straight from the hive.",
   },
+]
+
+// Extra items we also stock — mentioned only, buy them in-store.
+export const ALSO_AVAILABLE: Product[] = [
   {
     id: "bonemeal",
     name: "Bonemeal",
     pricePerItem: 0.2,
+    minStacks: 0.5,
     emojiFallback: "BM",
     color: "#f4ecd8",
     blurb: "Grow your farms in a flash. Cheapest bulk in town.",
@@ -44,6 +54,7 @@ export const ALSO_AVAILABLE: Product[] = [
     id: "white_dye",
     name: "White Dye",
     pricePerItem: 1,
+    minStacks: 0.5,
     emojiFallback: "WD",
     color: "#ffffff",
     blurb: "Pure white dye for banners, wool, and builds.",

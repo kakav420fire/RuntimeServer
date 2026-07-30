@@ -5,7 +5,8 @@ import {
   PRODUCTS,
   ALSO_AVAILABLE,
   STACK_SIZE,
-  MIN_STACKS,
+  HIGH_DEMAND,
+  MAX_STACKS_HIGH_DEMAND,
   estimateDelivery,
   formatPrice,
 } from "@/lib/products"
@@ -107,10 +108,10 @@ export function Store({ initialCount }: { initialCount: number }) {
       <header className="mb-8 flex flex-col items-center gap-4 text-center">
         <div className="mc-panel px-6 py-5">
           <h1 className="text-4xl text-primary text-shadow-mc md:text-6xl">
-            Democracy Craft XP Store
+            Bottle O&apos;s
           </h1>
           <p className="mt-2 text-xl text-muted-foreground md:text-2xl">
-            Bulk XP bottles · order more than you can carry from{" "}
+            Bulk XP &amp; honey bottles · order more than you can carry from{" "}
             <span className="text-accent">c410-c1</span>
           </p>
           <p className="mt-2 text-base leading-relaxed text-muted-foreground">
@@ -118,6 +119,22 @@ export function Store({ initialCount }: { initialCount: number }) {
             orders you can&apos;t easily grab in-store.
           </p>
         </div>
+
+        {HIGH_DEMAND && (
+          <div
+            role="alert"
+            className="mc-panel max-w-2xl border-accent px-5 py-4 text-center"
+          >
+            <p className="text-2xl text-accent text-shadow-mc">High Demand</p>
+            <p className="mt-2 text-lg leading-relaxed text-foreground">
+              We&apos;ve been sold out and bought out! Orders may take longer, and
+              you can order a max of {MAX_STACKS_HIGH_DEMAND}{" "}
+              stacks in bulk (or grab more from in-store). We&apos;ll return to
+              normal bulk sales in an estimated 1&ndash;1.5 months.
+            </p>
+          </div>
+        )}
+
         <OrderCounter count={count} />
       </header>
 
@@ -125,12 +142,14 @@ export function Store({ initialCount }: { initialCount: number }) {
         {/* Products */}
         <section className="lg:col-span-2" aria-labelledby="shop-heading">
           <h2 id="shop-heading" className="mb-4 text-3xl text-accent text-shadow-mc">
-            XP Bottles
+            Bulk Bottles
           </h2>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {PRODUCTS.map((product) => {
               const stacks = cart[product.id] ?? 0
               const quantity = Math.round(stacks * STACK_SIZE)
+              const maxStacks = HIGH_DEMAND ? MAX_STACKS_HIGH_DEMAND : 200
+              const atMax = stacks >= maxStacks
               return (
                 <article key={product.id} className="mc-panel flex flex-col gap-3 p-4">
                   <div className="flex items-center gap-3">
@@ -147,6 +166,10 @@ export function Store({ initialCount }: { initialCount: number }) {
                   </div>
                   <p className="text-lg leading-relaxed text-muted-foreground">
                     {product.blurb}
+                  </p>
+                  <p className="text-base text-muted-foreground">
+                    Min {product.minStacks} stack{product.minStacks === 1 ? "" : "s"} (
+                    {Math.round(product.minStacks * STACK_SIZE)} items)
                   </p>
 
                   {/* Stack stepper */}
@@ -168,8 +191,11 @@ export function Store({ initialCount }: { initialCount: number }) {
                       </div>
                       <button
                         type="button"
+                        disabled={atMax}
                         aria-label={`Add half stack of ${product.name}`}
-                        onClick={() => setStacks(product.id, Math.round((stacks + 0.5) * 2) / 2)}
+                        onClick={() =>
+                          setStacks(product.id, Math.min(maxStacks, Math.round((stacks + 0.5) * 2) / 2))
+                        }
                         className="mc-btn bg-primary px-3 py-1 text-2xl text-primary-foreground"
                       >
                         +
@@ -178,7 +204,7 @@ export function Store({ initialCount }: { initialCount: number }) {
                     {stacks === 0 ? (
                       <button
                         type="button"
-                        onClick={() => setStacks(product.id, MIN_STACKS)}
+                        onClick={() => setStacks(product.id, product.minStacks)}
                         className="mc-btn bg-accent px-3 py-2 text-xl text-accent-foreground"
                       >
                         Order in bulk
@@ -194,7 +220,10 @@ export function Store({ initialCount }: { initialCount: number }) {
             })}
           </div>
           <p className="mt-4 text-lg text-muted-foreground">
-            Minimum order is {MIN_STACKS} stacks ({MIN_STACKS * STACK_SIZE} items). 1 stack = {STACK_SIZE}.
+            1 stack = {STACK_SIZE} items. Minimums vary per item.
+            {HIGH_DEMAND
+              ? ` Max ${MAX_STACKS_HIGH_DEMAND} stacks per item while in high demand.`
+              : ""}
           </p>
 
           {/* Also available — mentioned only, ask in Discord */}
@@ -204,7 +233,7 @@ export function Store({ initialCount }: { initialCount: number }) {
           <p className="mb-4 text-lg text-muted-foreground">
             These aren&apos;t on the bulk order form yet — but you can buy them for cheap at our store.
           </p>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {ALSO_AVAILABLE.map((product) => (
               <article key={product.id} className="mc-panel flex flex-col gap-2 p-3">
                 <div className="flex items-center gap-2">
@@ -326,7 +355,7 @@ export function Store({ initialCount }: { initialCount: number }) {
       </div>
 
       <footer className="mt-10 text-center text-lg text-muted-foreground">
-        <p>Democracy Craft XP Store · Not affiliated with Mojang · In-store at c410-c1</p>
+        <p>Bottle O&apos;s · Democracy Craft · Not affiliated with Mojang · In-store at c410-c1</p>
       </footer>
       </div>
     </>

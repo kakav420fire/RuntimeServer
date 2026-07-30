@@ -9,9 +9,9 @@ const pixel = VT323({
 })
 
 export const metadata: Metadata = {
-  title: "Democracy Craft XP Store — Bulk XP Bottles & More",
+  title: "Bottle O's — Bulk XP & Honey Bottles for Democracy Craft",
   description:
-    "Buy XP bottles in bulk for Democracy Craft, plus honey bottles, bonemeal, and white dye. Fast in-game delivery to c410-c1.",
+    "Order XP and honey bottles in bulk for Democracy Craft. Bonemeal and white dye available cheap in-store at c410-c1.",
   generator: "v0.app",
 }
 

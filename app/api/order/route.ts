@@ -3,7 +3,8 @@ import { redis, ORDER_COUNT_KEY, STARTING_ORDERS } from "@/lib/redis"
 import {
   getProduct,
   STACK_SIZE,
-  MIN_STACKS,
+  HIGH_DEMAND,
+  MAX_STACKS_HIGH_DEMAND,
   estimateDelivery,
   formatPrice,
 } from "@/lib/products"
@@ -66,17 +67,24 @@ export async function POST(req: Request) {
     const stacks = Number(item?.stacks)
     if (!Number.isFinite(stacks) || stacks <= 0) continue
 
-    // Enforce 0.5-stack minimum and 0.5-stack increments; cap per line.
-    if (stacks < MIN_STACKS) {
+    // Enforce per-product minimum and 0.5-stack increments; cap per line.
+    if (stacks < product.minStacks) {
       return NextResponse.json(
-        { error: `Minimum order is ${MIN_STACKS} stacks per item.` },
+        { error: `Minimum order for ${product.name} is ${product.minStacks} stack(s).` },
         { status: 400 },
       )
     }
     const roundedStacks = Math.round(stacks * 2) / 2 // snap to 0.5
-    if (roundedStacks > 200) {
+
+    // While in high demand, cap each item at MAX_STACKS_HIGH_DEMAND stacks.
+    const maxStacks = HIGH_DEMAND ? MAX_STACKS_HIGH_DEMAND : 200
+    if (roundedStacks > maxStacks) {
       return NextResponse.json(
-        { error: "That's too many stacks for one order." },
+        {
+          error: HIGH_DEMAND
+            ? `We're in high demand — max ${MAX_STACKS_HIGH_DEMAND} stacks per item right now.`
+            : "That's too many stacks for one order.",
+        },
         { status: 400 },
       )
     }
@@ -117,19 +125,18 @@ export async function POST(req: Request) {
   }))
 
   const embed = {
-    title: "New XP Store Order",
+    title: "New Bottle O's Order",
     color: 0x5fbf4a,
     fields: [
       { name: "Discord", value: discordUsername, inline: true },
       { name: "In-Game Name", value: inGameName, inline: true },
-      { name: "Delivery To", value: "c410-c1", inline: true },
       ...fields,
       { name: "Total", value: formatPrice(total), inline: true },
       { name: "Est. Delivery", value: delivery, inline: true },
       { name: "Order #", value: `#${count}`, inline: true },
       ...(notes ? [{ name: "Notes", value: notes, inline: false }] : []),
     ],
-    footer: { text: "Democracy Craft XP Store" },
+    footer: { text: "Bottle O's · Democracy Craft" },
     timestamp: new Date().toISOString(),
   }
 
@@ -138,7 +145,7 @@ export async function POST(req: Request) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: "DC XP Store",
+        username: "Bottle O's",
         embeds: [embed],
       }),
     })
