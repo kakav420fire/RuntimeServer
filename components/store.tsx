@@ -120,20 +120,27 @@ export function Store({ initialCount }: { initialCount: number }) {
           </p>
         </div>
 
-        {HIGH_DEMAND && (
-          <div
-            role="alert"
-            className="mc-panel max-w-2xl border-accent px-5 py-4 text-center"
-          >
-            <p className="text-2xl text-accent text-shadow-mc">High Demand</p>
-            <p className="mt-2 text-lg leading-relaxed text-foreground">
-              We&apos;ve been sold out and bought out! Orders may take longer, and
-              you can order a max of {MAX_STACKS_HIGH_DEMAND}{" "}
-              stacks in bulk (or grab more from in-store). We&apos;ll return to
-              normal bulk sales in an estimated 1&ndash;1.5 months.
-            </p>
-          </div>
-        )}
+       {HIGH_DEMAND && (
+  <div
+    role="alert"
+    className="mc-panel max-w-2xl border-2 border-red-500 bg-red-950/40 px-6 py-5 text-center shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-pulse"
+  >
+    <div className="flex items-center justify-center gap-2">
+      <span className="text-3xl">⚠️</span>
+      <p className="text-3xl font-extrabold uppercase tracking-wider text-red-500 text-shadow-mc md:text-4xl">
+        High Demand
+      </p>
+      <span className="text-3xl">⚠️</span>
+    </div>
+    <p className="mt-3 text-lg leading-relaxed text-red-100 font-medium">
+      We&apos;ve been sold out and bought out! Orders may take longer, and
+      you can order a max of{" "}
+      <span className="font-bold text-red-400 underline">{MAX_STACKS_HIGH_DEMAND}</span>{" "}
+      stacks in bulk (or grab more from in-store). We&apos;ll return to
+      normal bulk sales in an estimated 1&ndash;1.5 months.
+    </p>
+  </div>
+)}
 
         <OrderCounter count={count} />
       </header>

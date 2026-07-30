@@ -14,7 +14,7 @@ export const MIN_STACKS = 0.5
 // ── High demand mode ────────────────────────────────────────────────
 // Set HIGH_DEMAND to true when we're sold/bought out. It caps every bulk
 // order at MAX_STACKS_HIGH_DEMAND stacks per item and shows a notice banner.
-export const HIGH_DEMAND = false
+export const HIGH_DEMAND = true
 export const MAX_STACKS_HIGH_DEMAND = 2
 
 // Products available to order in bulk online.
