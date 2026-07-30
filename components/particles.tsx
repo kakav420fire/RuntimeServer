@@ -39,6 +39,7 @@ export function Particles() {
     }))
 
     function handleResize() {
+      if (!canvas) return // <-- Added this check to fix the TypeScript error
       width = canvas.width = window.innerWidth
       height = canvas.height = window.innerHeight
     }
@@ -46,6 +47,7 @@ export function Particles() {
 
     let raf = 0
     function draw() {
+      if (!ctx) return
       ctx.clearRect(0, 0, width, height)
       for (const o of orbs) {
         o.y -= o.speed
