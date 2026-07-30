@@ -10,6 +10,7 @@ export type Product = {
 export const STACK_SIZE = 64
 export const MIN_STACKS = 0.5
 
+// The only product available to order in bulk online.
 export const PRODUCTS: Product[] = [
   {
     id: "xp_bottle",
@@ -19,6 +20,10 @@ export const PRODUCTS: Product[] = [
     color: "#5fbf4a",
     blurb: "Bottles o' Enchanting. Sold in bulk for fast leveling.",
   },
+]
+
+// Extra items we also stock — mentioned only, ask in Discord to buy.
+export const ALSO_AVAILABLE: Product[] = [
   {
     id: "honey_bottle",
     name: "Honey Bottle",
@@ -46,7 +51,7 @@ export const PRODUCTS: Product[] = [
 ]
 
 export function getProduct(id: string) {
-  return PRODUCTS.find((p) => p.id === id)
+  return [...PRODUCTS, ...ALSO_AVAILABLE].find((p) => p.id === id)
 }
 
 // Delivery estimate based on number of stacks ordered.

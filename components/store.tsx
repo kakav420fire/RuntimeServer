@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 import {
   PRODUCTS,
+  ALSO_AVAILABLE,
   STACK_SIZE,
   MIN_STACKS,
   estimateDelivery,
@@ -10,6 +11,8 @@ import {
 } from "@/lib/products"
 import { ItemIcon } from "./item-icon"
 import { OrderCounter } from "./order-counter"
+import { Particles } from "./particles"
+import { MusicPlayer } from "./music-player"
 
 type Cart = Record<string, number> // productId -> stacks
 
@@ -96,7 +99,10 @@ export function Store({ initialCount }: { initialCount: number }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8">
+    <>
+      <Particles />
+      <MusicPlayer />
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-8">
       {/* Header */}
       <header className="mb-8 flex flex-col items-center gap-4 text-center">
         <div className="mc-panel px-6 py-5">
@@ -104,7 +110,7 @@ export function Store({ initialCount }: { initialCount: number }) {
             Democracy Craft XP Store
           </h1>
           <p className="mt-2 text-xl text-muted-foreground md:text-2xl">
-            Bulk XP bottles & goodies · delivered to{" "}
+            Bulk XP bottles · delivered to{" "}
             <span className="text-accent">c410-c1</span>
           </p>
         </div>
@@ -115,9 +121,9 @@ export function Store({ initialCount }: { initialCount: number }) {
         {/* Products */}
         <section className="lg:col-span-2" aria-labelledby="shop-heading">
           <h2 id="shop-heading" className="mb-4 text-3xl text-accent text-shadow-mc">
-            The Shop
+            XP Bottles
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4">
             {PRODUCTS.map((product) => {
               const stacks = cart[product.id] ?? 0
               const quantity = Math.round(stacks * STACK_SIZE)
@@ -184,8 +190,35 @@ export function Store({ initialCount }: { initialCount: number }) {
             })}
           </div>
           <p className="mt-4 text-lg text-muted-foreground">
-            Minimum order is {MIN_STACKS} stacks ({MIN_STACKS * STACK_SIZE} items) per item. 1 stack = {STACK_SIZE}.
+            Minimum order is {MIN_STACKS} stacks ({MIN_STACKS * STACK_SIZE} items). 1 stack = {STACK_SIZE}.
           </p>
+
+          {/* Also available — mentioned only, ask in Discord */}
+          <h2 className="mt-8 mb-3 text-3xl text-accent text-shadow-mc">
+            Also In Stock
+          </h2>
+          <p className="mb-4 text-lg text-muted-foreground">
+            These aren&apos;t on the bulk order form yet — ping us on Discord to grab them.
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {ALSO_AVAILABLE.map((product) => (
+              <article key={product.id} className="mc-panel flex flex-col gap-2 p-3">
+                <div className="flex items-center gap-2">
+                  <ItemIcon label={product.emojiFallback} color={product.color} />
+                  <div className="min-w-0">
+                    <h3 className="text-xl leading-tight text-foreground">{product.name}</h3>
+                    <p className="text-base text-accent">
+                      {formatPrice(product.pricePerItem)}
+                      <span className="text-muted-foreground"> / item</span>
+                    </p>
+                  </div>
+                </div>
+                <p className="text-base leading-relaxed text-muted-foreground">
+                  {product.blurb}
+                </p>
+              </article>
+            ))}
+          </div>
         </section>
 
         {/* Order panel */}
@@ -291,6 +324,7 @@ export function Store({ initialCount }: { initialCount: number }) {
       <footer className="mt-10 text-center text-lg text-muted-foreground">
         <p>Democracy Craft XP Store · Not affiliated with Mojang · Pickup at c410-c1</p>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }
