@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-pixel), "Courier New", monospace;
+  --font-mono: var(--font-pixel), "Courier New", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-foreground: var(--panel-foreground);
+  --color-border-dark: var(--border-dark);
+  --color-border-light: var(--border-light);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+}
+
+:root {
+  /* dark stone base */
+  --background: #1a1611;
+  --foreground: #f4ecd8;
+
+  /* wood/stone panel */
+  --panel: #2b2118;
+  --panel-foreground: #f4ecd8;
+  --border-dark: #14100b;
+  --border-light: #5a4632;
+
+  /* enchanting XP green */
+  --primary: #5fbf4a;
+  --primary-foreground: #14100b;
+
+  /* honey amber */
+  --accent: #e0a92e;
+  --accent-foreground: #14100b;
+
+  --muted: #3a2e22;
+  --muted-foreground: #c4b394;
+
+  --radius: 0px;
+}
+
+* {
+  border-color: var(--border-dark);
+}
+
+html {
+  background-color: var(--background);
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  image-rendering: pixelated;
+  letter-spacing: 0.02em;
+}
+
+/* Blocky Minecraft-style raised panel */
+.mc-panel {
+  background-color: var(--panel);
+  border: 4px solid;
+  border-top-color: var(--border-light);
+  border-left-color: var(--border-light);
+  border-right-color: var(--border-dark);
+  border-bottom-color: var(--border-dark);
+}
+
+/* Pressed / inset look */
+.mc-inset {
+  background-color: var(--muted);
+  border: 4px solid;
+  border-top-color: var(--border-dark);
+  border-left-color: var(--border-dark);
+  border-right-color: var(--border-light);
+  border-bottom-color: var(--border-light);
+}
+
+/* Blocky button */
+.mc-btn {
+  border: 4px solid;
+  border-top-color: var(--border-light);
+  border-left-color: var(--border-light);
+  border-right-color: var(--border-dark);
+  border-bottom-color: var(--border-dark);
+  transition: filter 0.1s ease;
+}
+.mc-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+.mc-btn:active:not(:disabled) {
+  border-top-color: var(--border-dark);
+  border-left-color: var(--border-dark);
+  border-right-color: var(--border-light);
+  border-bottom-color: var(--border-light);
+}
+.mc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.text-shadow-mc {
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
