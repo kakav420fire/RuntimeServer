@@ -2,18 +2,15 @@
 
 import { useEffect, useRef, useState } from "react"
 
-// Cozy, slow procedural melody inspired by calm Minecraft piano.
-// Generated with the Web Audio API so no audio asset is required.
 const MELODY = [
-  // [semitone offset from A3 (220Hz), beats]
   [3, 2], [7, 2], [10, 2], [7, 2],
   [5, 2], [8, 2], [12, 2], [8, 2],
   [3, 2], [7, 2], [10, 1], [12, 1], [10, 2],
   [-2, 2], [3, 2], [7, 4],
 ] as const
 
-const BASE = 220 // A3
-const BEAT = 0.62 // seconds per beat
+const BASE = 220
+const BEAT = 0.62
 
 function freq(semitones: number) {
   return BASE * Math.pow(2, semitones / 12)
@@ -35,7 +32,6 @@ export function MusicPlayer() {
     const loopLength = t - (ctx.currentTime + 0.1)
 
     for (const n of notes) {
-      // soft "bell/piano" voice: two detuned triangle oscillators
       for (const [type, detune, vol] of [
         ["triangle", 0, 0.16],
         ["sine", 4, 0.09],
@@ -57,11 +53,10 @@ export function MusicPlayer() {
       }
     }
 
-    // gentle low pad root note under the loop
     const pad = ctx.createOscillator()
     const padGain = ctx.createGain()
     pad.type = "sine"
-    pad.frequency.value = freq(-9) // low root
+    pad.frequency.value = freq(-9)
     padGain.gain.setValueAtTime(0.0001, ctx.currentTime)
     padGain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1)
     padGain.gain.setValueAtTime(0.05, ctx.currentTime + loopLength - 1)
@@ -88,8 +83,10 @@ export function MusicPlayer() {
       gainRef.current = master
     }
     await ctx.resume()
-    schedule(ctx, gainRef.current!)
-    setPlaying(true)
+    if (ctx.state === "running") {
+      schedule(ctx, gainRef.current!)
+      setPlaying(true)
+    }
   }
 
   function stop() {
@@ -104,9 +101,27 @@ export function MusicPlayer() {
   }
 
   useEffect(() => {
+    start()
+
+    const handleFirstInteraction = () => {
+      if (ctxRef.current?.state !== "running") {
+        start()
+      }
+      window.removeEventListener("pointerdown", handleFirstInteraction)
+      window.removeEventListener("keydown", handleFirstInteraction)
+      window.removeEventListener("scroll", handleFirstInteraction)
+    }
+
+    window.addEventListener("pointerdown", handleFirstInteraction)
+    window.addEventListener("keydown", handleFirstInteraction)
+    window.addEventListener("scroll", handleFirstInteraction)
+
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current)
       ctxRef.current?.close()
+      window.removeEventListener("pointerdown", handleFirstInteraction)
+      window.removeEventListener("keydown", handleFirstInteraction)
+      window.removeEventListener("scroll", handleFirstInteraction)
     }
   }, [])
 
